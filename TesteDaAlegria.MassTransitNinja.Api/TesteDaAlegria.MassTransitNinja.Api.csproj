@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.0.1" />
+    <PackageReference Include="MassTransit.Analyzers" Version="8.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TesteDaAlegria.MassTransitNinja.Components\TesteDaAlegria.MassTransitNinja.Components.csproj" />
+    <ProjectReference Include="..\TesteDaAlegria.MassTransitNinja.Contracts\TesteDaAlegria.MassTransitNinja.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
