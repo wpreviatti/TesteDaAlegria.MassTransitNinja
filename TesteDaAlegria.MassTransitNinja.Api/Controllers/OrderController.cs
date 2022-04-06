@@ -25,15 +25,22 @@ namespace TesteDaAlegria.MassTransitNinja.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] SubmitOrderVo vo)
         {
-            var resposta = await _requestClient.GetResponse<OrderSubmissionAccepted>(new
+            var (aceita, rejeitada) = await _requestClient.GetResponse<OrderSubmissionAccepted, OrderSubmissionRejected>(new
             {
 
                 OrderId = vo.OrderId,
                 TimesTamp = vo.TimesTamp,
                 CustomerNumber = vo.CustomerNumber
             });
-
-            return Ok(resposta.Message);
+            if (aceita.IsCompletedSuccessfully)
+            {
+                var resposta = await aceita;
+                return Ok(resposta);
+            }
+            else {
+                var resposta = await rejeitada;
+                return BadRequest(resposta);
+            }
         }
 
     }
