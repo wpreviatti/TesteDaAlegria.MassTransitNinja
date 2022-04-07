@@ -10,15 +10,16 @@ namespace TesteDaAlegria.MassTransitNinja.Components.Consumers
     public class SubmitOrderConsumer :
         IConsumer<SubmitOrder>
     {
+        /*
         private readonly ILogger<SubmitOrderConsumer> _logger;
 
         public SubmitOrderConsumer(ILogger<SubmitOrderConsumer> logger)
         {
             _logger = logger;
-        }
+        }*/
         public async Task Consume(ConsumeContext<SubmitOrder> context)
         {
-            _logger.Log(LogLevel.Information, "SubmitOrderConsumer: {CustomerNumber}", context.Message.CustomerNumber);
+            //_logger.Log(LogLevel.Information, "SubmitOrderConsumer: {CustomerNumber}", context.Message.CustomerNumber);
             if (context.Message.CustomerNumber.Contains("TEST"))
             {
                 await context.RespondAsync<OrderSubmissionRejected>(new
