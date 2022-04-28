@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using MassTransit;
 using TesteDaAlegria.MassTransitNinja.Components.Consumers;
+using Company.StateMachines;
 
 namespace TesteDaAlegria.MassTransitNinja.OrderService
 {
@@ -23,7 +24,7 @@ namespace TesteDaAlegria.MassTransitNinja.OrderService
                     services.AddMassTransit(cfg =>
                     {
                         //cfg.AddConsumersFromNamespaceContaining<SubmitOrderConsumer>();
-
+                        cfg.AddSagaStateMachine<OrderStateMachine, OrderState>().RedisRepository();
 
                         var entryAssembly = Assembly.GetEntryAssembly();
 

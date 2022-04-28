@@ -1,7 +1,6 @@
 using MassTransit;
-using MassTransit.Mediator;
-using TesteDaAlegria.MassTransitNinja.Components.Consumers;
 using TesteDaAlegria.MassTransitNinja.Contracts.Order;
+using TesteDaAlegria.MassTransitNinja.Contracts.Order.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +12,7 @@ builder.Services.AddMassTransit(cfg =>
 {
     cfg.UsingRabbitMq();
     cfg.AddRequestClient<SubmitOrder>();
+    cfg.AddRequestClient<CheckOrder>();
 });
 
 services.AddOptions<MassTransitHostOptions>()
