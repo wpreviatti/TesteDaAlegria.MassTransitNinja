@@ -1,4 +1,6 @@
 using MassTransit;
+using MassTransit.Transports.Fabric;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using TesteDaAlegria.MassTransitNinja.Contracts.Order;
 using TesteDaAlegria.MassTransitNinja.Contracts.Order.Interfaces;
 
@@ -10,7 +12,29 @@ var services = builder.Services;
 services.AddSingleton(KebabCaseEndpointNameFormatter.Instance);
 builder.Services.AddMassTransit(cfg =>
 {
-    cfg.UsingRabbitMq();
+    cfg.UsingRabbitMq((context,cfgagdo)=>
+    {
+        cfgagdo.ReceiveEndpoint("GueriGueri-a", receiva =>
+        {
+            receiva.ConfigureConsumeTopology = false;
+            receiva.Bind<SubmitOrder>(bindao =>
+            {
+                bindao.ExchangeType = "direct";
+                bindao.RoutingKey = "A";
+
+            });
+        });
+        cfgagdo.ReceiveEndpoint("GueriGueri-b", receiva =>
+        {
+            receiva.ConfigureConsumeTopology = false;
+            receiva.Bind<SubmitOrder>(bindao =>
+            {
+                bindao.ExchangeType = "direct";
+                bindao.RoutingKey = "B";
+
+            });
+        });
+    });
     cfg.AddRequestClient<SubmitOrder>();
     cfg.AddRequestClient<CheckOrder>();
 });

@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
 using TesteDaAlegria.MassTransitNinja.Api.Model;
 using TesteDaAlegria.MassTransitNinja.Contracts.Order;
 using TesteDaAlegria.MassTransitNinja.Contracts.Order.Interfaces;
@@ -15,14 +16,17 @@ namespace TesteDaAlegria.MassTransitNinja.Api.Controllers
         readonly ILogger<OrderController> _logger;
         readonly IRequestClient<SubmitOrder> _requestClient;
         private readonly IRequestClient<CheckOrder> _checkOrderClient;
+        readonly ISendEndpoint _sendEndpoint;
 
         public OrderController(ILogger<OrderController> logger, 
             IRequestClient<SubmitOrder> requestClient,
-            IRequestClient<CheckOrder> checkOrderClient)
+            IRequestClient<CheckOrder> checkOrderClient,
+            ISendEndpoint sendEndpoint)
         {
             _logger = logger;
             _requestClient = requestClient;
             _checkOrderClient = checkOrderClient;
+            _sendEndpoint = sendEndpoint;
         }
         [HttpGet]
         public async Task<IActionResult> Get(Guid guid)
@@ -45,6 +49,14 @@ namespace TesteDaAlegria.MassTransitNinja.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] SubmitOrderVo vo)
         {
+            await _sendEndpoint.Send<SubmitOrder>(new
+            {
+
+                OrderId = vo.OrderId,
+                TimesTamp = vo.TimesTamp,
+                CustomerNumber = vo.CustomerNumber
+            },x=>x.SetRoutingKey("A"));
+            /* não aceita request apenas send e publishpara routing key
             var (aceita, rejeitada) = await _requestClient.GetResponse<OrderSubmissionAccepted, OrderSubmissionRejected>(new
             {
 
@@ -61,6 +73,7 @@ namespace TesteDaAlegria.MassTransitNinja.Api.Controllers
                 var resposta = await rejeitada;
                 return BadRequest(resposta);
             }
+            */
         }
 
     }
